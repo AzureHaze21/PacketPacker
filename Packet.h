@@ -65,25 +65,32 @@ class Packet
 {
 private:
 	PacketHeader m_header;
-	//std::vector<byte> m_data{ 0 };
 	byte *m_data = nullptr;
+
 public:
+	Packet() 
+	{ 
+		m_header.opcode = op;
+		m_data = new byte[sizeof(PacketHeader)]{ 0 };
+		memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
+	}
+
 	template<typename T, typename... Args>
 	Packet(T first, Args&&... args)
 	{	
 		uint32_t totalSize = GetSize(first, args...) + sizeof(PacketHeader);
-		m_data = new byte[totalSize];
+		m_data = new byte[totalSize]{ 0 };
 		m_header.opcode = op;
 		m_header.size = totalSize;
-		std::memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
+		memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
 		m_bufpos += sizeof(PacketHeader);
 		Pack(first, args...);
 	}
 
 	~Packet() { if (m_data) { delete[] m_data; } }
 
-	const byte* ToBytes() const { return m_data.data(); }
-	const uint32_t& Size() const { return m_data.size(); }
+	const byte* ToBytes() const { return m_data; }
+	const uint32_t& Size() const { return m_header.size; }
 
 private:
 	uint32_t m_bufpos{ 0 };
@@ -131,7 +138,6 @@ private:
 		Pack(args...);
 	}
 };
-
 
 /*
 int main()
