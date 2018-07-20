@@ -75,7 +75,7 @@ public:
 		m_data = new byte[totalSize];
 		m_header.opcode = op;
 		m_header.size = totalSize;
-		memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
+		std::memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
 		m_bufpos += sizeof(PacketHeader);
 		Pack(first, args...);
 	}
