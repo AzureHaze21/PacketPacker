@@ -72,7 +72,7 @@ public:
 	{ 
 		m_header.opcode = op;
 		m_data = new byte[sizeof(PacketHeader)]{ 0 };
-		memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
+		std::memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
 	}
 
 	template<typename T, typename... Args>
@@ -82,7 +82,7 @@ public:
 		m_data = new byte[totalSize]{ 0 };
 		m_header.opcode = op;
 		m_header.size = totalSize;
-		memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
+		std::memcpy(&m_data[0], &m_header, sizeof(PacketHeader));
 		m_bufpos += sizeof(PacketHeader);
 		Pack(first, args...);
 	}
