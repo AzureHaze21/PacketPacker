@@ -1,3 +1,8 @@
+#include <vector>
+#include <string>
+#include <tuple>
+#include <cstring>
+
 std::size_t GetSize(std::string& str)
 {
 	return str.size() + sizeof(uint16_t);
