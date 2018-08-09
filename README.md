@@ -1,7 +1,7 @@
 # PacketPacker
 
-Exemple
-__________
+Example
+-------
 
 ```cpp
 #include "struct.h"
