@@ -58,14 +58,18 @@ inline void packArg(char **data, std::size_t& i, const char *val)
 }
 
 template <typename... Ts>
-char *pack(Ts&&... ts)
+auto pack(Ts&&... ts)
 {
 	auto size = GetSize(ts...);
 	char *data = new char[size];
-	std::size_t i = 0;
-	auto l = { (packArg(&data, i, ts), 0)... };
 
-	return data;
+	if (data == nullptr)
+		return Packet();
+
+	std::size_t pos = 0;
+	auto l = { (packArg(&data, pos, ts), 0)... };
+
+	return Packet(data, size);
 }
 
 /*
@@ -126,3 +130,23 @@ auto unpack(const char *data)
 
 	return t;
 }
+
+/*
+**
+**	Packet
+**
+*/
+
+class Packet
+{
+	char *m_data = nullptr;
+	std::size_t m_size{ 0 };
+
+public:
+	Packet() = default;
+	Packet(char *data, std::size_t size) : m_data(data), m_size(size) {}
+	~Packet() { if (m_data) delete[] m_data; }
+
+	const char *data() const { return m_data; }
+	std::size_t size() const { return m_size; }
+};
