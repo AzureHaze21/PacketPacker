@@ -99,26 +99,22 @@ auto pack(Ts&&... ts)
 */
 
 template<typename T>
-inline T readValue(const char **data)
+inline void readValue(const char **data, T& elem)
 {
 	static_assert(
 		!std::is_pointer<T>::value && !std::is_class<T>::value,
 		__FUNCTION__": parameter is not a basic type or a string");
 
-	T ret = *(T*)(*data);
+	elem = *(T*)(*data);
 	*data += sizeof(T);
-
-	return ret;
 }
 
 template<>
-inline std::string readValue<std::string>(const char **data)
+inline void readValue<std::string>(const char **data, std::string& elem)
 {
 	auto size = *(uint16_t*)(*data);
-	std::string ret(*data + sizeof(uint16_t), size);
+	elem.assign(*data + sizeof(uint16_t), size);
 	*data += size + sizeof(uint16_t);
-
-	return ret;
 }
 
 template<class Tuple, std::size_t N, std::size_t I>
@@ -127,7 +123,7 @@ struct TupleMaker
 	template<typename T, typename... Ts>
 	static void write(Tuple& t, const char **data)
 	{
-		std::get<I - N>(t) = readValue<T>(data);
+		readValue<T>(data, std::get<I - N>(t));
 		TupleMaker<Tuple, N - 1, I>::write<Ts...>(t, data);
 	}
 };
@@ -138,7 +134,7 @@ struct TupleMaker<Tuple, 1, I>
 	template<typename T>
 	static void write(Tuple& t, const char **data)
 	{
-		std::get<I - 1>(t) = readValue<T>(data);
+		 readValue<T>(data, std::get<I - 1>(t));
 	}
 };
 
