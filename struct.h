@@ -25,7 +25,7 @@ public:
 
 std::size_t GetSize(std::string& str)
 {
-	return str.size() + sizeof(uint16_t);
+	return str.size() + sizeof(uint16_t); //each string is prefixed with its size for unpacking
 }
 
 std::size_t GetSize(const char *pStr)
