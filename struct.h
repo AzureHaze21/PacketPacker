@@ -3,6 +3,26 @@
 #include <tuple>
 #include <cstring>
 
+/*
+**
+**	Packet
+**
+*/
+
+class Packet
+{
+	char *m_data = nullptr;
+	std::size_t m_size{ 0 };
+
+public:
+	Packet() = default;
+	Packet(char *data, std::size_t size) : m_data(data), m_size(size) {}
+	~Packet() { if (m_data) delete[] m_data; }
+
+	const char *data() const { return m_data; }
+	std::size_t size() const { return m_size; }
+};
+
 std::size_t GetSize(std::string& str)
 {
 	return str.size() + sizeof(uint16_t);
@@ -130,23 +150,3 @@ auto unpack(const char *data)
 
 	return t;
 }
-
-/*
-**
-**	Packet
-**
-*/
-
-class Packet
-{
-	char *m_data = nullptr;
-	std::size_t m_size{ 0 };
-
-public:
-	Packet() = default;
-	Packet(char *data, std::size_t size) : m_data(data), m_size(size) {}
-	~Packet() { if (m_data) delete[] m_data; }
-
-	const char *data() const { return m_data; }
-	std::size_t size() const { return m_size; }
-};
