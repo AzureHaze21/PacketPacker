@@ -124,7 +124,7 @@ struct TupleMaker
 	static void write(Tuple& t, const char **data)
 	{
 		readValue<T>(data, std::get<I - N>(t));
-		TupleMaker<Tuple, N - 1, I>::write<Ts...>(t, data);
+		TupleMaker<Tuple, N - 1, I>::template write<Ts...>(t, data);
 	}
 };
 
@@ -142,7 +142,7 @@ template<class... Args>
 auto unpack(const char *data)
 {
 	std::tuple<Args...> t;
-	TupleMaker<decltype(t), sizeof...(Args), sizeof...(Args)>::write<Args...>(t, &data);
+	TupleMaker<decltype(t), sizeof...(Args), sizeof...(Args)>::template write<Args...>(t, &data);
 
 	return t;
 }
